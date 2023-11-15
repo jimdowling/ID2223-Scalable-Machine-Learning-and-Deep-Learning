@@ -18,7 +18,7 @@ if LOCAL == False:
 project = hopsworks.login()
 fs = project.get_feature_store()
 
-wine_fg = fs.get_feature_group(name="wine", version=1)
+wine_fg = fs.get_feature_group(name="wine_reduced_new", version=1)
 wine_df = wine_fg.read()
 
 def generate_wine_sample(wine_data):
@@ -55,7 +55,7 @@ def g():
 
     new_wine = generate_wine_sample(wine_df)
 
-    wine_fg = fs.get_feature_group(name="wine",version=1)
+    wine_fg = fs.get_feature_group(name="wine_reduced_new",version=1)
     wine_fg.insert(new_wine)
 
 if __name__ == "__main__":
