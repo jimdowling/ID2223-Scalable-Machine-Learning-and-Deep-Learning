@@ -7,9 +7,9 @@ fs = project.get_feature_store()
 
 dataset_api = project.get_dataset_api()
 
-dataset_api.download("Resources/images/latest_iris.png")
-dataset_api.download("Resources/images/actual_iris.png")
-dataset_api.download("Resources/images/df_recent.png")
+dataset_api.download("Resources/images/latest_iris.png", overwrite = True)
+dataset_api.download("Resources/images/actual_iris.png", overwrite = True)
+dataset_api.download("Resources/images/df_recent.png", overwrite = True)
 #dataset_api.download("Resources/images/confusion_matrix.png")
 
 with gr.Blocks() as demo:

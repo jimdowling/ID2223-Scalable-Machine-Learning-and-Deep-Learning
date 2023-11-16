@@ -8,4 +8,3 @@ dataframe-image
 modal
 gradio==3.14
 xgboost
-eli5

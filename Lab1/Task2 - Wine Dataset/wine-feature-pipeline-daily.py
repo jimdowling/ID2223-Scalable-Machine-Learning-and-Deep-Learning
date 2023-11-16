@@ -33,7 +33,7 @@ def generate_wine_sample(wine_data):
     filtered_data = wine_data[wine_data['type'] == wine_type]
     print(filtered_data)
 
-    # Sample other features from the filtered dataset
+    #TO FIX SAMPLING OF QUALITY
     sample = {}
     sample['type'] = wine_type
     for column in filtered_data.columns:

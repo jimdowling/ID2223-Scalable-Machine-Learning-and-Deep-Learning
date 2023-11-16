@@ -29,7 +29,7 @@ def g():
     fs = project.get_feature_store()
     
     mr = project.get_model_registry()
-    model = mr.get_model("wine_model", version=2)
+    model = mr.get_model("wine_model", version=1)
     model_dir = model.download()
     model = joblib.load(model_dir + "/wine_model.pkl")
     
@@ -42,18 +42,23 @@ def g():
     offset = 1
     quality = y_pred[y_pred.size-offset]
     #flower_url = "https://raw.githubusercontent.com/featurestoreorg/serverless-ml-course/main/src/01-module/assets/" + flower + ".png"
-    #print("Flower predicted: " + flower)
-    #img = Image.open(requests.get(flower_url, stream=True).raw)            
-    #img.save("./latest_iris.png")
-    #dataset_api = project.get_dataset_api()    
-    #dataset_api.upload("./latest_iris.png", "Resources/images", overwrite=True)
+    print("Quality predicted: " + str(quality))
+    #img = Image.open(requests.get(flower_url, stream=True).raw)
+    with open("./latest_quality.txt", "w") as file:
+        file.write(str(quality))
+    dataset_api = project.get_dataset_api()
+    dataset_api.upload("./latest_quality.txt", "Resources/qualities", overwrite=True)
    
-    wine_fg = fs.get_feature_group(name="wine", version=1)
+    wine_fg = fs.get_feature_group(name="wine_reduced_new", version=1)
     df = wine_fg.read() 
     print(df)
     label = df.iloc[-offset]["quality"]
     #label_url = "https://raw.githubusercontent.com/featurestoreorg/serverless-ml-course/main/src/01-module/assets/" + label + ".png"
-    #print("Flower actual: " + label)
+    print("Actual quality: " + str(label))
+    with open("./actual_quality.txt", "w") as file:
+        file.write(str(label))
+    dataset_api = project.get_dataset_api()
+    dataset_api.upload("./actual_quality.txt", "Resources/qualities", overwrite=True)
     #img = Image.open(requests.get(label_url, stream=True).raw)            
     #img.save("./actual_iris.png")
     #dataset_api.upload("./actual_iris.png", "Resources/images", overwrite=True)
@@ -80,8 +85,8 @@ def g():
 
 
     df_recent = history_df.tail(4)
-    #dfi.export(df_recent, './df_recent.png', table_conversion = 'matplotlib')
-    #dataset_api.upload("./df_recent.png", "Resources/images", overwrite=True)
+    dfi.export(df_recent, './df_recent.png', table_conversion = 'matplotlib')
+    dataset_api.upload("./df_recent.png", "Resources/qualities", overwrite=True)
     
     predictions = history_df[['prediction']]
     labels = history_df[['label']]
@@ -89,7 +94,7 @@ def g():
     # Only create the confusion matrix when our iris_predictions feature group has examples of all 3 iris flowers
     #print("Number of different flower predictions to date: " + str(predictions.value_counts().count()))
     #if predictions.value_counts().count() == 3:
-     #   results = confusion_matrix(labels, predictions)
+    #results = confusion_matrix(labels, predictions)
     
       #  df_cm = pd.DataFrame(results, ['True Setosa', 'True Versicolor', 'True Virginica'],
                              # ['Pred Setosa', 'Pred Versicolor', 'Pred Virginica'])
