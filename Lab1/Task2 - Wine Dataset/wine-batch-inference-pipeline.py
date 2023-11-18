@@ -1,12 +1,11 @@
 import os
 import modal
 
-#DA SISTEMARE!!!!!!!!!!!!!
 LOCAL=False
 
 if LOCAL == False:
    stub = modal.Stub("wine_batch")
-   hopsworks_image = modal.Image.debian_slim().pip_install(["hopsworks","joblib","seaborn","scikit-learn==1.3.2","dataframe-image", "xgboost"])
+   hopsworks_image = modal.Image.debian_slim().pip_install(["hopsworks","joblib","seaborn","scikit-learn==1.2.2","dataframe-image", "xgboost"])
    @stub.function(image=hopsworks_image, schedule=modal.Period(minutes=5), secret=modal.Secret.from_name("HOPSWORKS_API_KEY"))
    def f():
        g()
@@ -15,35 +14,27 @@ def g():
     import pandas as pd
     import hopsworks
     import joblib
-    import datetime
-    from PIL import Image
     from datetime import datetime
     import dataframe_image as dfi
     from sklearn.metrics import confusion_matrix
-    from matplotlib import pyplot
     import seaborn as sns
-    import requests
-    import xgboost
 
     project = hopsworks.login()
     fs = project.get_feature_store()
     
     mr = project.get_model_registry()
-    model = mr.get_model("wine_model", version=1)
+    model = mr.get_model("wine_model_upsampled", version=1)
     model_dir = model.download()
-    model = joblib.load(model_dir + "/wine_model.pkl")
+    model = joblib.load(model_dir + "/wine_model_upsampled.pkl")
     
-    feature_view = fs.get_feature_view(name="wine", version=1)
+    feature_view = fs.get_feature_view(name="wine_reduced_new", version=1)
     batch_data = feature_view.get_batch_data()
-    
-    #NEED TO CHANGE ALL OF THIS!!
+
     y_pred = model.predict(batch_data)
     print(y_pred)
     offset = 1
     quality = y_pred[y_pred.size-offset]
-    #flower_url = "https://raw.githubusercontent.com/featurestoreorg/serverless-ml-course/main/src/01-module/assets/" + flower + ".png"
     print("Quality predicted: " + str(quality))
-    #img = Image.open(requests.get(flower_url, stream=True).raw)
     with open("./latest_quality.txt", "w") as file:
         file.write(str(quality))
     dataset_api = project.get_dataset_api()
@@ -53,15 +44,11 @@ def g():
     df = wine_fg.read() 
     print(df)
     label = df.iloc[-offset]["quality"]
-    #label_url = "https://raw.githubusercontent.com/featurestoreorg/serverless-ml-course/main/src/01-module/assets/" + label + ".png"
     print("Actual quality: " + str(label))
     with open("./actual_quality.txt", "w") as file:
         file.write(str(label))
     dataset_api = project.get_dataset_api()
     dataset_api.upload("./actual_quality.txt", "Resources/qualities", overwrite=True)
-    #img = Image.open(requests.get(label_url, stream=True).raw)            
-    #img.save("./actual_iris.png")
-    #dataset_api.upload("./actual_iris.png", "Resources/images", overwrite=True)
     
     monitor_fg = fs.get_or_create_feature_group(name="wine_predictions",
                                                 version=1,
@@ -83,30 +70,20 @@ def g():
     # the insertion was done asynchronously, so it will take ~1 min to land on App
     history_df = pd.concat([history_df, monitor_df])
 
-
     df_recent = history_df.tail(4)
-    dfi.export(df_recent, './df_recent.png', table_conversion = 'matplotlib')
-    dataset_api.upload("./df_recent.png", "Resources/qualities", overwrite=True)
+    dfi.export(df_recent, './df_recent_class.png', table_conversion = 'matplotlib')
+    dataset_api.upload("./df_recent_class.png", "Resources/qualities", overwrite=True)
     
     predictions = history_df[['prediction']]
     labels = history_df[['label']]
 
-    # Only create the confusion matrix when our iris_predictions feature group has examples of all 3 iris flowers
-    #print("Number of different flower predictions to date: " + str(predictions.value_counts().count()))
-    #if predictions.value_counts().count() == 3:
-    #results = confusion_matrix(labels, predictions)
-    
-      #  df_cm = pd.DataFrame(results, ['True Setosa', 'True Versicolor', 'True Virginica'],
-                             # ['Pred Setosa', 'Pred Versicolor', 'Pred Virginica'])
-    
-       # cm = sns.heatmap(df_cm, annot=True)
-        #fig = cm.get_figure()
-       # fig.savefig("./confusion_matrix.png")
-        #dataset_api.upload("./confusion_matrix.png", "Resources/images", overwrite=True)
-    #else:
-     #   print("You need 3 different flower predictions to create the confusion matrix.")
-      #  print("Run the batch inference pipeline more times until you get 3 different iris flower predictions") 
-
+    # Create the confusion matrix
+    conf_matrix = confusion_matrix(labels, predictions)
+    cm = sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues',
+                xticklabels=range(3, 10), yticklabels=range(3, 10))
+    fig = cm.get_figure()
+    fig.savefig("./confusion_matrix.png")
+    dataset_api.upload("./confusion_matrix.png", "Resources/qualities", overwrite=True)
 
 if __name__ == "__main__":
     if LOCAL == True :
