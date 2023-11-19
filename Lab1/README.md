@@ -14,14 +14,13 @@ The first machine learning problem addressed is the classical Iris dataset predi
 
 For the wine dataset:
 - A Jupyter Notebook was dedicated to Exploratory Data Analysis (EDA).
-- We dropped the non-relevant features, filled the missing values and encoded the 'type' feature.
-- `wine-training-pipeline.ipynb` involved creating a Feature View of the Group and training an XGBoost algorithm with default features, saving the model in Hopsworks.
-- To understand if classification algorithms performed better we also implemented some of them in `wine-training-pipeline-classification-ipynb`.
-- In `wine-feature-pipeline-daily.py`, we developed a function generating synthetic wines based on EDA insights, incorporating historical knowledge indicating survival likelihood.
+- We dropped the non-relevant features and the duplicate rows, filled the missing values and encoded the 'type' feature.
+- `wine-training-pipeline_regression.ipynb` involved creating a Feature View of the Group and training an XGBoost algorithm with default features, saving the model in Hopsworks.
+- Given that the regression algorithm wasn't accurate enough, we did the same procedure using Random Forest Classification algorithm in `wine-training-pipeline_classification.ipynb`, which resulted in higher performance.
+- In `wine-feature-pipeline-daily.py`, we developed a function generating synthetic wines based on EDA insights, incorporating historical knowledge.
 - The prediction of the quality for synthetic wines was carried out in `wine-batch-inference-pipeline.py`.
 
 ### Huggingface Spaces
 Additionally, there are two Huggingface Spaces:
-...
-
-These spaces host prediction models and applications for both Iris and Wine datasets.
+- The first one is called 'wine'. It allows the user to input wine features and then predicts the wine quality based on the user input. This interface can be accessed using the public link https://07a2e891-65d9-49c8.gradio.live
+- The second one is called wine-monitor. It displays the latest predicted and actual quality, the last 4 predictions in a dataframe and a confusion matrix. This interface can be accessed using the public link https://8598806a-8cb2-410a.gradio.live
