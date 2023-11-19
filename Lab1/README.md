@@ -23,4 +23,4 @@ For the wine dataset:
 ### Huggingface Spaces
 Additionally, there are two Huggingface Spaces:
 - The first one is called 'wine'. It allows the user to input wine features and then predicts the wine quality based on the user input. Access it [here](https://07a2e891-65d9-49c8.gradio.live).
-- The second one is called wine-monitor. It displays the latest predicted and actual quality, the last 4 predictions in a dataframe and a confusion matrix. Access it [here](https://8598806a-8cb2-410a.gradio.live).
+- The second one is called wine-monitor. It displays the latest predicted and actual quality, the last 4 predictions in a dataframe and a confusion matrix. Access it [here](https://0a17038e-2340-4566.gradio.live).
