@@ -21,10 +21,10 @@ For the wine dataset:
 - The prediction of the quality for synthetic wines was carried out in `wine-batch-inference-pipeline.py`.
 
 ### Huggingface Spaces
-Additionally, there are two Huggingface Spaces for each task:<br><br>
+Additionally, there are two Huggingface Spaces for each task:  
 Iris classification task:
 - The first one is called 'iris'. It allows the user to input iris features and then predicts the type based on the user input. Access it [here](https://laura000-iris.hf.space).
-- The second one is called iris-monitor. It displays the latest predicted and actual flower, the last 4 predictions in a dataframe and a confusion matrix. Access it [here](https://laura000-iris-monitor.hf.space).<br><br>
+- The second one is called iris-monitor. It displays the latest predicted and actual flower, the last 4 predictions in a dataframe and a confusion matrix. Access it [here](https://laura000-iris-monitor.hf.space).  
 Wine classification task:
 - The first one is called 'wine'. It allows the user to input wine features and then predicts the wine quality based on the user input. Access it [here](https://laura000-wine.hf.space/).
 - The second one is called wine-monitor. It displays the latest predicted and actual quality, the last 4 predictions in a dataframe and a confusion matrix. Access it [here](https://laura000-wine-monitor.hf.space).
