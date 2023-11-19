@@ -1,6 +1,6 @@
 # Lab 1
 
-In my first lab session, we implemented a serverless machine learning system, tackling two distinct machine learning problems.
+In our first lab session, we implemented a serverless machine learning system, tackling two distinct machine learning problems.
 
 ## Iris Dataset Prediction
 
