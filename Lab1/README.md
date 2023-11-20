@@ -2,7 +2,7 @@
 
 In our first lab session, we implemented a serverless machine-learning system, tackling two distinct machine-learning problems. Every notebook presents comments and data visualization for clarity and depth.
 
-## Iris Dataset Prediction 🌸
+# Iris Dataset Prediction 🌸
 
 The first machine learning problem addressed is the classical Iris dataset prediction.
 - We stored the features in Hopsworks FeatureStore.
@@ -14,7 +14,7 @@ The first machine learning problem addressed is the classical Iris dataset predi
 ## Overview 🍇🍷
 This Wine Quality Prediction System leverages a comprehensive data analysis and machine learning approach to predict the quality of wine. The system uses the 'winequalityN.csv' dataset and applies various Python libraries and machine learning techniques to predict the 'quality' target variable. The README provides a detailed walkthrough of each step in the pipeline, from data preparation to model deployment and monitoring.
 ## 1. Exploratory Data Analysis (EDA) 🔍
-Purpose: Understand dataset characteristics.
+In `wine-eda-and-backfill-feature-group.py`, our goal was to understand dataset characteristics.
 Techniques Used: Seaborn, Pandas, and NumPy.
 Key Steps:
 - Data Loading: Connection established with Hopsworks.
@@ -22,7 +22,7 @@ Key Steps:
 - Data Inspection: Identifying data types and missing values.
 - Data Visualization: Distribution of features and quality scores.
 ## 2. Data Preprocessing and Feature Engineering ⚙️
-Objective: Prepare the dataset for modeling.
+After the first explorative phase, we prepared the dataset for modeling.
 Processes:
 - One-Hot Encoding: For categorical variables.
 - Handling Missing Values: Random replacement with sampling from the same column.
@@ -32,6 +32,7 @@ Processes:
 - After preprocessing we created a Feature View of the Group and stored it in Hopsworks
 - The feature group was later accessed as a feature view to perform train-test splitting and model predictions
 ## 4. Model Training and Evaluation 🤖📊
+In `wine-training-pipeline-regression.py` and `wine-training-pipeline-classification.py`, we created and improved different ML models, which were later exported on Hopsworks.
 Models Used: KNN, Random Forest, XGBoost, for different approaches to the problem. Classification was later preferred due to the unbalanced nature of the dataset.
 Techniques:
 - Grid Search: For hyperparameter tuning.
