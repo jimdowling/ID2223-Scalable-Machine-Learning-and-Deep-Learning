@@ -1,16 +1,6 @@
 import os
-import modal
 
-LOCAL=False
-
-if LOCAL == False:
-   stub = modal.Stub("wine_batch")
-   hopsworks_image = modal.Image.debian_slim().pip_install(["hopsworks","joblib","seaborn","scikit-learn==1.2.2","dataframe-image", "xgboost"])
-   @stub.function(image=hopsworks_image, schedule=modal.Period(minutes=5), secret=modal.Secret.from_name("HOPSWORKS_API_KEY"))
-   def f():
-       g()
-
-def g():
+def inference():
     import pandas as pd
     import hopsworks
     import joblib
@@ -86,9 +76,4 @@ def g():
     dataset_api.upload("./confusion_matrix.png", "Resources/qualities", overwrite=True)
 
 if __name__ == "__main__":
-    if LOCAL == True :
-        g()
-    else:
-        stub.deploy("wine_batch")
-        with stub.run():
-            f()
+    inference()

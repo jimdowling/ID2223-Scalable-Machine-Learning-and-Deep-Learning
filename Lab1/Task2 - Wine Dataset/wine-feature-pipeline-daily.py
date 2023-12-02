@@ -1,25 +1,7 @@
-import modal
 import numpy as np
 import hopsworks
 import pandas as pd
 
-LOCAL=False #to run it in modal we have to set LOCAL to false --> to run it into terminal: modal run ... + modal deploy to make it run everyday
-
-if LOCAL == False:
-   stub = modal.Stub("wine_daily")
-   image = modal.Image.debian_slim().pip_install(["hopsworks"])
-
-   @stub.function(image=image, schedule=modal.Period(minutes=5), secret=modal.Secret.from_name("HOPSWORKS_API_KEY"))
-   def f():
-       g()
-
-
-project = hopsworks.login()
-fs = project.get_feature_store()
-
-wine_fg = fs.get_feature_group(name="wine_reduced_new", version=1)
-wine_df = wine_fg.read()
-print(wine_df)
 def generate_sample_for_quality(df, deviation_factor=0.1):
     sample = {}
     wine_types = [0, 1]
@@ -46,15 +28,13 @@ def generate_sample_for_quality(df, deviation_factor=0.1):
 
     return pd.DataFrame.from_records([sample])
 
-# Example usage
-synthetic_sample = generate_sample_for_quality(wine_df)
-print(synthetic_sample)
-
-def g():
+def generate():
 
     project = hopsworks.login()
     fs = project.get_feature_store()
 
+    wine_fg = fs.get_feature_group(name="wine_reduced_new", version=1)
+    wine_df = wine_fg.read()
     new_wine = generate_sample_for_quality(wine_df)
     print(new_wine)
 
@@ -62,9 +42,4 @@ def g():
     wine_fg.insert(new_wine)
 
 if __name__ == "__main__":
-    if LOCAL == True :
-        g()
-    else:
-        stub.deploy("wine_daily")
-        with stub.run():
-            f()
+    generate()
